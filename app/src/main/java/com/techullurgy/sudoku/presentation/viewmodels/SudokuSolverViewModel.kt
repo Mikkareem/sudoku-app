@@ -13,7 +13,6 @@ class SudokuSolverViewModel : ViewModel() {
     var sudokuGameState: MutableState<SudokuSolverState> = mutableStateOf(
         value = SudokuSolverState(
             solveRequested = false,
-            isValid = false,
             sudokuGridItemList = initialise(),
             originality = (Array(81){false}).asList()
         ),
@@ -30,16 +29,20 @@ class SudokuSolverViewModel : ViewModel() {
         }
 
         viewModelScope.launch {
-            println("Started")
             SudokuGenerator.updateOriginalBoardFromFlattenedBoard(sudokuGameState.value.sudokuGridItemList)
             val isValid = SudokuGenerator.solveSudoku()
-            println("Done")
+
             sudokuGameState.value = sudokuGameState.value.copy(
                 errorMsg = "",
-                isValid = isValid,
                 solveRequested = true,
-                sudokuGridItemList = SudokuGenerator.getSudokuBoard().flatten()
+                sudokuGridItemList = SudokuGenerator.flattenSudokuBoard()
             )
+
+            if(!isValid) {
+                sudokuGameState.value = sudokuGameState.value.copy(
+                    errorMsg = "Invalid Grid"
+                )
+            }
         }
     }
 
@@ -47,6 +50,15 @@ class SudokuSolverViewModel : ViewModel() {
         sudokuGameState.value = sudokuGameState.value.copy(
             sudokuGridItemList = sudokuGameState.value.sudokuGridItemList.mapIndexed { index, value -> if(index == currentIndex) currentValue else value },
             originality = sudokuGameState.value.originality.mapIndexed { index, value -> if(index == currentIndex) true else value }
+        )
+    }
+
+    fun clearStates() {
+        sudokuGameState.value = sudokuGameState.value.copy(
+            sudokuGridItemList = sudokuGameState.value.sudokuGridItemList.map { 0 },
+            originality = sudokuGameState.value.originality.map { false },
+            errorMsg = "",
+            solveRequested = false
         )
     }
 }

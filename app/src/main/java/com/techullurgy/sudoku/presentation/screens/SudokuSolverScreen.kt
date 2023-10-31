@@ -1,5 +1,7 @@
 package com.techullurgy.sudoku.presentation.screens
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -31,7 +33,7 @@ import com.techullurgy.sudoku.presentation.viewmodels.SudokuSolverViewModel
 
 @Composable
 fun SudokuSolverScreen(
-    viewModel: SudokuSolverViewModel = remember { SudokuSolverViewModel() },
+    viewModel: SudokuSolverViewModel,
     navController: NavController,
 ) {
     var currentSelectedIndex by remember { mutableIntStateOf(-1) }
@@ -52,10 +54,29 @@ fun SudokuSolverScreen(
                 viewModel.onValueChange(currentSelectedIndex, it)
             }
         )
-        Button(onClick = { viewModel.solve() }) {
-            Text(text = "Solve")
+        Row {
+            Button(
+                onClick = { viewModel.solve() },
+                enabled = !viewModel.sudokuGameState.value.solveRequested
+            ) {
+                Text(text = "Solve")
+            }
+            Button(onClick = { navController.popBackStack() }) {
+                Text(text = "Back")
+            }
+            Button(
+                onClick = { viewModel.clearStates() }
+            ) {
+                Text(text = "Clear")
+            }
         }
-        Text(text = viewModel.sudokuGameState.value.errorMsg)
+        AnimatedVisibility(visible = viewModel.sudokuGameState.value.errorMsg.isNotBlank()) {
+            Text(text = viewModel.sudokuGameState.value.errorMsg)
+        }
+
+        BackHandler {
+            println("Back is Pressed")
+        }
     }
 }
 
