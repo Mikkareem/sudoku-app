@@ -29,7 +29,7 @@ import com.techullurgy.sudoku.domain.core.SudokuColors
 fun ControlsView(
     modifier: Modifier = Modifier,
     isBoardFocused: Boolean = true,
-    bannedControls: List<Int>? = listOf(3,5),
+    bannedControls: List<Int>? = null,
     onControlSelected: (Int) -> Unit = {}
 ) {
     LazyVerticalGrid(
