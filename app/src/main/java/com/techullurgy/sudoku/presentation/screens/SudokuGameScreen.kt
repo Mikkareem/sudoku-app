@@ -37,7 +37,7 @@ fun SudokuGameScreen(
         mutableStateOf(IntSize.Zero)
     }
 
-    var isDismissed by remember { mutableStateOf(false) }
+    val isDismissed by remember { mutableStateOf(false) }
 
     val currentTime = viewModel.stopWatchFlow.collectAsState(initial = "00:00")
 

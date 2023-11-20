@@ -8,8 +8,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -39,7 +42,7 @@ fun SudokuSolverScreen(
     var currentSelectedIndex by remember { mutableIntStateOf(-1) }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -49,6 +52,7 @@ fun SudokuSolverScreen(
             onCellFocusChanged = { currentSelectedIndex = it },
             currentSelectedIndex = currentSelectedIndex
         )
+        Spacer(modifier = Modifier.height(24.dp))
         ControlsView(
             onControlSelected = {
                 viewModel.onValueChange(currentSelectedIndex, it)

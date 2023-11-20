@@ -4,15 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -29,137 +29,69 @@ import com.techullurgy.sudoku.domain.core.SudokuColors
 fun ControlsView(
     modifier: Modifier = Modifier,
     isBoardFocused: Boolean = true,
-    bannedControls: List<Int>? = null,
+    bannedControls: List<Int>? = listOf(3,5),
     onControlSelected: (Int) -> Unit = {}
 ) {
-    Column(modifier = modifier) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            for(control in 1..3) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = modifier
+    ) {
+        items(12) { index ->
+            if(index < 9) {
+                val control = index + 1
+
                 if (bannedControls != null && bannedControls.contains(control)) {
-                    Spacer(modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp))
+                    Spacer(Modifier)
                 } else {
                     Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .clip(RoundedCornerShape(32.dp))
                             .background(SudokuColors.primary)
+                            .padding(16.dp)
                             .then(
-                                if (!isBoardFocused)
+                                if (!isBoardFocused) {
                                     Modifier
-                                else {
+                                } else {
                                     Modifier.clickable {
                                         onControlSelected(control)
                                     }
                                 }
                             )
-                            .padding(horizontal = 32.dp, vertical = 8.dp)
                     ) {
                         Text(
                             text = "$control",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 32.sp,
+                            fontSize = 24.sp,
                             color = Color.White
                         )
                     }
                 }
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            for(control in 4..6) {
-                if (bannedControls != null && bannedControls.contains(control)) {
-                    Spacer(modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp))
-                } else {
+            } else {
+                if(index == 10) {
                     Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .clip(RoundedCornerShape(32.dp))
                             .background(SudokuColors.primary)
+                            .padding(16.dp)
                             .then(
                                 if (!isBoardFocused)
                                     Modifier
                                 else {
                                     Modifier.clickable {
-                                        onControlSelected(control)
+                                        onControlSelected(0)
                                     }
                                 }
                             )
-                            .padding(horizontal = 32.dp, vertical = 8.dp)
                     ) {
-                        Text(
-                            text = "$control",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 32.sp,
-                            color = Color.White
-                        )
+                        Icon(painter = painterResource(id = R.drawable.baseline_backspace_24), contentDescription = null, tint = Color.White)
                     }
-                }
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            for(control in 7..9) {
-                if (bannedControls != null && bannedControls.contains(control)) {
-                    Spacer(modifier = Modifier.padding(horizontal = 32.dp, vertical = 8.dp))
                 } else {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(32.dp))
-                            .background(SudokuColors.primary)
-                            .then(
-                                if (!isBoardFocused)
-                                    Modifier
-                                else {
-                                    Modifier.clickable {
-                                        onControlSelected(control)
-                                    }
-                                }
-                            )
-                            .padding(horizontal = 32.dp, vertical = 8.dp)
-                    ) {
-                        Text(
-                            text = "$control",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 32.sp,
-                            color = Color.White
-                        )
-                    }
+                    Spacer(Modifier)
                 }
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(32.dp))
-                    .background(SudokuColors.primary)
-                    .then(
-                        if (!isBoardFocused)
-                            Modifier
-                        else {
-                            Modifier.clickable {
-                                onControlSelected(0)
-                            }
-                        }
-                    )
-                    .padding(horizontal = 32.dp, vertical = 8.dp)
-            ) {
-                Icon(painter = painterResource(id = R.drawable.baseline_backspace_24), contentDescription = null, tint = Color.White)
             }
         }
     }
