@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.dialog
@@ -63,7 +64,12 @@ fun MainScreen() {
             )
         ) {
             GameDialog {
-                navController.popBackStack(route = "sudoku_game", inclusive = true)
+                navController.navigate("main_menu") {
+                    popUpTo(navController.graph.findStartDestination().id) {
+                        saveState = false
+                    }
+                    launchSingleTop = true
+                }
             }
         }
     }

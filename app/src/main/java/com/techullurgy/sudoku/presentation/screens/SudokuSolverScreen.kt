@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +30,7 @@ import androidx.navigation.NavController
 import com.techullurgy.sudoku.domain.core.SudokuColors
 import com.techullurgy.sudoku.presentation.components.ControlsView
 import com.techullurgy.sudoku.presentation.components.GridLineView
+import com.techullurgy.sudoku.presentation.components.SudokuButton
 import com.techullurgy.sudoku.presentation.viewmodels.SudokuSolverViewModel
 
 
@@ -42,7 +42,9 @@ fun SudokuSolverScreen(
     var currentSelectedIndex by remember { mutableIntStateOf(-1) }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 32.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -58,21 +60,27 @@ fun SudokuSolverScreen(
                 viewModel.onValueChange(currentSelectedIndex, it)
             }
         )
+//        Row {
+//            Button(
+//                onClick = { viewModel.solve() },
+//                enabled = !viewModel.sudokuGameState.value.solveRequested
+//            ) {
+//                Text(text = "Solve")
+//            }
+//            Button(onClick = { navController.popBackStack() }) {
+//                Text(text = "Back")
+//            }
+//            Button(
+//                onClick = { viewModel.clearStates() }
+//            ) {
+//                Text(text = "Clear")
+//            }
+//        }
+
         Row {
-            Button(
-                onClick = { viewModel.solve() },
-                enabled = !viewModel.sudokuGameState.value.solveRequested
-            ) {
-                Text(text = "Solve")
-            }
-            Button(onClick = { navController.popBackStack() }) {
-                Text(text = "Back")
-            }
-            Button(
-                onClick = { viewModel.clearStates() }
-            ) {
-                Text(text = "Clear")
-            }
+            SudokuButton(onClick = { viewModel.solve() }, text = "Solve")
+            SudokuButton(onClick = { navController.popBackStack() }, text = "Back")
+            SudokuButton(onClick = { viewModel.clearStates() }, text = "Clear")
         }
         AnimatedVisibility(visible = viewModel.sudokuGameState.value.errorMsg.isNotBlank()) {
             Text(text = viewModel.sudokuGameState.value.errorMsg)
